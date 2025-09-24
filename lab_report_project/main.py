@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 
 """
-Основной скрипт для выполнения лабораторной работы по моделированию случайных векторов.
+Лабораторная работа 1.2.2
+Моделирование случайных векторов
 """
 
 import numpy as np
 from pathlib import Path
 from typing import Dict, List, Tuple, Any
+import matplotlib.pyplot as plt
 
 # Импортируем наши модули
 from src.data_generation import generate_normal_samples, generate_binary_samples
@@ -31,54 +33,71 @@ def setup_directories() -> Dict[str, Path]:
     return dirs
 
 def main():
-    """Основная функция для выполнения лабораторной работы."""
+    """
+    Основная функция для выполнения лабораторной работы 1.2.2.
+    Выполняет моделирование случайных векторов с нормальным и биномиальным распределениями.
+    """
     # Настройка путей
     dirs = setup_directories()
     
-    # Параметры для генерации данных
-    N = 500  # Количество сэмплов в каждой выборке
+    # 1. Параметры для генерации данных
+    print("1. Настройка параметров генерации...")
+    N = 200  # Количество сэмплов в каждой выборке
     
     # Параметры нормальных распределений
     means = [
-        np.array([1, 2]),
-        np.array([3, 0]),
-        np.array([2, 3])
+        np.array([1, 0]),
+        np.array([-1, 1]),
+        np.array([1, -2])
     ]
     
-    # Ковариационные матрицы (равные и неравные)
-    covs_equal = [
-        np.array([[1, 0.5], [0.5, 1]]),
-        np.array([[1, 0.5], [0.5, 1]])
+    # Общая ковариационная матрица для первых двух распределений
+    common_cov = np.array([
+        [1.0, 0.5],
+        [0.5, 1.0]
+    ])
+    covs_equal = [common_cov, common_cov]
+    
+    # 3. Параметры для трех нормальных распределений с разными ковариационными матрицами
+    means_3d = [
+        np.array([0, 0]),    # Третье распределение
+        np.array([4, 1]),    # Четвертое распределение
+        np.array([-3, 2])    # Пятое распределение
     ]
     
     covs_unequal = [
-        np.array([[1, 0.2], [0.2, 1]]),
-        np.array([[1, 0.8], [0.8, 1]]),
-        np.array([[1, 0], [0, 1]])
+        np.array([[1.0, 0.3], [0.3, 0.8]]),  # Для третьего распределения
+        np.array([[0.6, 0.1], [0.1, 1.2]]),  # Для четвертого распределения
+        np.array([[1.5, -0.4], [-0.4, 0.7]])  # Для пятого распределения
     ]
     
-    # 1. Генерация нормально распределенных выборок
-    print("Генерация нормально распределенных выборок...")
+    # 4. Генерация выборок с равными ковариационными матрицами
+    print("\n2. Генерация выборок с равными ковариационными матрицами...")
     samples_eq, files_eq = generate_normal_samples(
-        means[:2], covs_equal, N, dirs['data']
+        means_2d, covs_equal, N, dirs['data']
     )
     
+    # 5. Генерация выборок с разными ковариационными матрицами
+    print("3. Генерация выборок с разными ковариационными матрицами...")
     samples_uneq, files_uneq = generate_normal_samples(
-        means, covs_unequal, N, dirs['data']
+        means_3d, covs_unequal, N, dirs['data']
     )
     
-    # 2. Генерация бинарных выборок
-    print("Генерация бинарных выборок...")
-    binary_samples, binary_files = generate_binary_samples(
-        N, 0.3, 2, dirs['data']
-    )
-    
-    # 3. Оценка параметров распределений
-    print("Оценка параметров распределений...")
+    # 6. Оценка параметров распределений
+    print("\n4. Оценка параметров распределений...")
     estimations = estimate_parameters(samples_uneq)
     
-    # 4. Расчет расстояний между распределениями
-    print("Расчет расстояний между распределениями...")
+    # Вывод оценок параметров
+    print("\nОценки параметров распределений:")
+    for i, (mean_est, cov_est) in enumerate(estimations, 1):
+        print(f"\nРаспределение {i}:")
+        print(f"Оценка мат. ожидания:\n{mean_est}")
+        print(f"Оценка ковариационной матрицы:\n{cov_est}")
+    
+    # 7. Расчет расстояний между распределениями
+    print("\n5. Расчет расстояний между распределениями...")
+    
+    # Расстояние между первыми двумя распределениями
     dist_mahalanobis = mahalanobis_dist(
         estimations[0][0], 
         estimations[1][0], 
@@ -97,28 +116,45 @@ def main():
         "Расстояние Бхатачария": dist_bhattacharyya
     }
     
-    # 5. Визуализация результатов
-    print("Создание визуализаций...")
+    print("\nРасстояния между распределениями:")
+    for name, value in distances.items():
+        print(f"{name}: {value:.4f}")
+    
+    # 8. Генерация бинарных выборок с вероятностью 0.3
+    print("\n6. Генерация бинарных выборок...")
+    binary_samples, binary_files = generate_binary_samples(
+        N, 0.3, 2, dirs['data']
+    )
+    
+    # 9. Визуализация результатов
+    print("\n7. Создание визуализаций...")
+    
+    # Визуализация распределений с равными ковариационными матрицами
     img_eq = save_scatter(
         samples_eq, 
         dirs['plots'], 
-        "Распределения с равными ковариационными матрицами",
+        "Два нормальных распределения с равными ковариационными матрицами",
         "X",
-        "Y"
+        "Y",
+        colors=['blue', 'red']
     )
     
+    # Визуализация распределений с разными ковариационными матрицами
     img_uneq = save_scatter(
         samples_uneq, 
         dirs['plots'], 
-        "Распределения с разными ковариационными матрицами",
+        "Три нормальных распределения с разными ковариационными матрицами",
         "X",
-        "Y"
+        "Y",
+        colors=['green', 'purple', 'orange']
     )
     
-    # 6. Генерация отчета
-    print("Формирование отчета...")
-    report_path = dirs['reports'] / 'lab_report.md'
+    # 10. Генерация отчета
+    print("\n8. Формирование отчета...")
+    report_path = dirs['reports'] / 'lab_report_1.2.2.md'
     generate_report(
+        means=means_2d + means_3d,
+        covs=covs_equal + covs_unequal,
         estimations=estimations,
         distances=distances,
         data_files=files_uneq + files_eq + binary_files,
@@ -126,8 +162,10 @@ def main():
         output_path=report_path
     )
     
-    print(f"\nЛабораторная работа успешно выполнена!")
+    print("\n" + "="*60)
+    print("Лабораторная работа 1.2.2 успешно выполнена!")
     print(f"Отчет сохранен в: {report_path}")
+    print("="*60)
 
 if __name__ == "__main__":
     main()

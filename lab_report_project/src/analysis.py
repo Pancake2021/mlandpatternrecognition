@@ -27,15 +27,28 @@ def mahalanobis_dist(
     """
     Вычисляет расстояние Махаланобиса между двумя векторами.
     
+    Формула: D² = (x - y)ᵀ · Σ⁻¹ · (x - y)
+    
     Аргументы:
-        mean1: Первый вектор средних
-        mean2: Второй вектор средних
-        cov: Ковариационная матрица
+        mean1: Первый вектор средних (x)
+        mean2: Второй вектор средних (y)
+        cov: Ковариационная матрица (Σ)
         
     Возвращает:
         Расстояние Махаланобиса между векторами
     """
-    return distance.mahalanobis(mean1, mean2, np.linalg.inv(cov))
+    # Вычисляем разность векторов
+    diff = mean1 - mean2
+    
+    # Вычисляем обратную ковариационную матрицу
+    inv_cov = np.linalg.inv(cov)
+    
+    # Вычисляем расстояние Махаланобиса
+    # (x-y)ᵀ · Σ⁻¹ · (x-y)
+    distance_squared = np.dot(np.dot(diff.T, inv_cov), diff)
+    
+    # Возвращаем квадратный корень (если нужен сам D, а не D²)
+    return np.sqrt(distance_squared)
 
 def bhattacharyya_dist(
     mean1: np.ndarray, 

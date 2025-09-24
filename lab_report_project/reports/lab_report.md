@@ -5,61 +5,61 @@
 ### Класс 1:
 **Математическое ожидание:**
 ```
-[1.0348 2.0154]
+[0.9994 1.9566]
 ```
 
 **Ковариационная матрица:**
 ```
-[[1.0005 0.2861]
- [0.2861 1.1538]]
+[[0.996  0.2322]
+ [0.2322 0.9975]]
 ```
 
 ### Класс 2:
 **Математическое ожидание:**
 ```
-[3.0423 0.0103]
+[2.9827 0.0178]
 ```
 
 **Ковариационная матрица:**
 ```
-[[1.1175 0.8922]
- [0.8922 1.1133]]
+[[0.9967 0.7659]
+ [0.7659 0.916 ]]
 ```
 
 ### Класс 3:
 **Математическое ожидание:**
 ```
-[2.0293 3.0449]
+[1.9555 2.962 ]
 ```
 
 **Ковариационная матрица:**
 ```
-[[0.9103 0.0032]
- [0.0032 0.9407]]
+[[1.0622 0.0028]
+ [0.0028 0.8826]]
 ```
 
 ## Расстояния между распределениями
 
-- **Расстояние Махаланобиса:** 3.9875
-- **Расстояние Бхатачария:** 2.0913
+- **Расстояние Махаланобиса:** 4.0140
+- **Расстояние Бхатачария:** 2.1342
 
 ## Визуализация распределений
 
 ### Распределения С Равными Ковариационными Матрицами
-![](/Users/glebpankeev/Desktop/pythonProject/RaspObraz/lab_report_project/reports/plots/распределения_с_равными_ковариационными_матрицами.png)
+![](/Users/glebpankeev/Desktop/pythonProject/RaspObraz/mlandpatternrecognition/lab_report_project/reports/plots/распределения_с_равными_ковариационными_матрицами.png)
 
 ### Распределения С Разными Ковариационными Матрицами
-![](/Users/glebpankeev/Desktop/pythonProject/RaspObraz/lab_report_project/reports/plots/распределения_с_разными_ковариационными_матрицами.png)
+![](/Users/glebpankeev/Desktop/pythonProject/RaspObraz/mlandpatternrecognition/lab_report_project/reports/plots/распределения_с_разными_ковариационными_матрицами.png)
 
 ## Файлы с данными
 
-- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/lab_report_project/data/generated/normal_sample_1.npy`
-- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/lab_report_project/data/generated/normal_sample_2.npy`
-- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/lab_report_project/data/generated/normal_sample_3.npy`
-- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/lab_report_project/data/generated/normal_sample_1.npy`
-- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/lab_report_project/data/generated/normal_sample_2.npy`
-- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/lab_report_project/data/generated/binary_sample_1.npy`
-- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/lab_report_project/data/generated/binary_sample_2.npy`
+- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/mlandpatternrecognition/lab_report_project/data/generated/normal_sample_1.npy`
+- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/mlandpatternrecognition/lab_report_project/data/generated/normal_sample_2.npy`
+- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/mlandpatternrecognition/lab_report_project/data/generated/normal_sample_3.npy`
+- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/mlandpatternrecognition/lab_report_project/data/generated/normal_sample_1.npy`
+- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/mlandpatternrecognition/lab_report_project/data/generated/normal_sample_2.npy`
+- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/mlandpatternrecognition/lab_report_project/data/generated/binary_sample_1.npy`
+- `/Users/glebpankeev/Desktop/pythonProject/RaspObraz/mlandpatternrecognition/lab_report_project/data/generated/binary_sample_2.npy`
 
 ## Выводы
 

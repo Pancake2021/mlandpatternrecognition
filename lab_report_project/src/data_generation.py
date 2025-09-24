@@ -1,13 +1,66 @@
 import numpy as np
 import os
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Optional
+
+
+def generate_normal_clt(mean: float = 0.0, std: float = 1.0, size: int = 1, n_uniform: int = 12) -> np.ndarray:
+    """
+    Генерирует нормально распределенные числа с использованием ЦПТ.
+    
+    Аргументы:
+        mean: Математическое ожидание
+        std: Среднеквадратическое отклонение
+        size: Количество сэмплов
+        n_uniform: Количество равномерных случайных величин для суммирования (по умолчанию 12)
+        
+    Возвращает:
+        Массив нормально распределенных чисел
+    """
+    # Генерируем n_uniform равномерных случайных величин на интервале [0, 1]
+    uniform_samples = np.random.uniform(0, 1, size=(n_uniform, size))
+    
+    # (частный случай ЦПТ)
+    # Сумма 12 U[0,1] имеет мат. ожидание 6 и дисперсию 1
+    z = (np.sum(uniform_samples, axis=0) - n_uniform/2) / np.sqrt(n_uniform/12)
+    
+    # Масштабируем к нужным параметрам
+    return mean + std * z
+
+
+def generate_multivariate_normal_clt(mean: np.ndarray, cov: np.ndarray, n_samples: int = 1) -> np.ndarray:
+    """
+    Генерирует многомерное нормальное распределение с использованием ЦПТ.
+    
+    Аргументы:
+        mean: Вектор средних значений
+        cov: Ковариационная матрица
+        n_samples: Количество сэмплов
+        
+    Возвращает:
+        Матрицу размера (n_samples, n_features) с нормально распределенными векторами
+    """
+    n_features = len(mean)
+    
+    # Генерируем стандартные нормальные величины с помощью ЦПТ
+    z = np.zeros((n_samples, n_features))
+    for i in range(n_features):
+        z[:, i] = generate_normal_clt(mean=0, std=1, size=n_samples)
+    
+    # Разложение Холецкого для ковариационной матрицы
+    L = np.linalg.cholesky(cov)
+    
+    # Преобразуем к нужному распределению
+    samples = mean + np.dot(z, L.T)
+    
+    return samples
 
 def generate_normal_samples(
     means: List[np.ndarray],
     covs: List[np.ndarray],
     n_samples: int,
-    output_dir: Union[str, Path]
+    output_dir: Union[str, Path],
+    use_clt: bool = True
 ) -> Tuple[List[np.ndarray], List[str]]:
     """
     Генерирует выборки из многомерного нормального распределения.
@@ -17,6 +70,7 @@ def generate_normal_samples(
         covs: Список ковариационных матриц
         n_samples: Количество сэмплов для каждой выборки
         output_dir: Директория для сохранения сгенерированных данных
+        use_clt: Если True, использует ЦПТ для генерации нормальных величин
         
     Возвращает:
         Кортеж (список массивов с выборками, список путей к сохранённым файлам)
@@ -28,8 +82,13 @@ def generate_normal_samples(
     file_paths = []
     
     for i, (mean, cov) in enumerate(zip(means, covs)):
-        # Генерация выборки
-        sample = np.random.multivariate_normal(mean, cov, n_samples)
+        if use_clt:
+            # Используем нашу реализацию с ЦПТ
+            sample = generate_multivariate_normal_clt(mean, cov, n_samples)
+        else:
+            # Используем встроенную функцию для сравнения
+            sample = np.random.multivariate_normal(mean, cov, n_samples)
+        
         samples.append(sample)
         
         # Сохранение в файл
